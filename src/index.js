@@ -1,17 +1,30 @@
 import React, { Component, PropTypes } from 'react'
 import { render } from 'react-dom'
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
 import App from './containers/App'
+import Products from './containers/Products'
+import Product from './containers/Product'
+import Cart from './containers/Cart'
 
-let name = "Bob"
+import products from './modules/products'
 
-const onChange = (e) => {
-  e.preventDefault()
-  name = "George"
-  main()
-}
+const reducer = combineReducers({
+  products
+})
 
-const main = () => {
-  render(<App name={name} onChange={onChange} />, document.getElementById('app'))
-}
+const store = createStore(reducer)
 
-main()
+render(
+  <Provider store={store}>
+    <Router history={browserHistory}>
+      <Route path='/' component={App}>
+        <IndexRoute component={Products} />
+        <Route path='products/:id' component={Product} />
+        <Route path='cart' component={Cart} />
+      </Route>
+    </Router>
+  </Provider>
+  , document.getElementById('app')
+)

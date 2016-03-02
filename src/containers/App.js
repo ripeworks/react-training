@@ -1,10 +1,22 @@
 import React, { Component, PropTypes } from 'react'
+import NameEditor from '../components/NameEditor'
+import NameViewer from '../components/NameViewer'
+import Nav from '../components/Nav'
 
 export default class App extends Component {
-  static propTypes = {
-    name : PropTypes.string.isRequired,
-    onChange : PropTypes.func
+  static childContextTypes = {
+    name : PropTypes.string
   };
+
+  state = {
+    name: 'bob'
+  };
+
+  getChildContext() {
+    return {
+      name: this.state.name
+    }
+  }
 
   componentDidMount() {
     console.log(this.props)
@@ -14,18 +26,19 @@ export default class App extends Component {
     console.log(props)
   }
 
-  onButtonClick(e) {
+  onChangeName(e) {
     e.preventDefault()
-    console.log('CRAP')
-    this.props.onChange(e)
+    this.setState({name: 'George'})
   }
 
   render() {
-    const {name, onChange} = this.props
+    const {name} = this.state
 
     return <div>
-      <h1>Hello {name}</h1>
-      <button onClick={this.onButtonClick.bind(this)}>BLAM</button>
+      <NameViewer />
+      <NameEditor onChange={this.onChangeName.bind(this)} />
+      <Nav />
+      {this.props.children}
     </div>
   }
 }
